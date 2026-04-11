@@ -951,34 +951,52 @@ animation: scrollText 15s linear infinite;
 }
 
 .trust-strip {
+background: #f8faff;
+color: #1d2433;
+font-size: 0.84rem;
+border-bottom: 1px solid #dce8fd;
+padding: 12px 0;
+overflow: hidden;
+}
+
+.trust-strip .container {
+display: flex;
+align-items: center;
+justify-content: center;
+gap: 20px;
+flex-wrap: wrap;
+width: 100%;
+}
+
+.trust-item {
+color: #1d2433;
+text-decoration: none;
+white-space: nowrap;
+padding: 4px 8px;
+}
+
+@media (min-width: 621px) {
+.trust-strip {
 overflow: hidden;
 position: relative;
 height: 40px;
 display: flex;
 align-items: center;
-background: #f8faff;
-color: #1d2433;
-font-size: 0.84rem;
-border-bottom: 1px solid #dce8fd;
 }
-
 .trust-strip .container {
 display: flex;
 animation: scrollText 20s linear infinite;
 width: max-content;
 }
-
 .trust-strip .container:hover {
 animation-play-state: paused;
 }
-
 .trust-item {
 padding: 0 30px;
 white-space: nowrap;
 flex-shrink: 0;
-color: #1d2433;
-text-decoration: none;
 display: inline-block;
+}
 }
 </style>
 </head>
