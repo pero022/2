@@ -880,10 +880,13 @@ text-align: center;
 .header-actions { gap: 8px; }
 .icon-btn { font-size: 0.8rem; padding: 8px 10px; }
 .counter { min-width: 18px; height: 18px; font-size: 0.68rem; }
+.product-grid { grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 12px; }
+.product-card { padding: 12px; }
+.product-card img { height: 120px; object-fit: cover; }
 }
 
 @media (max-width: 480px) {
-.container { padding: 0 10px; }
+.container { padding: 0 8px; }
 .trust-strip { height: 32px; }
 .trust-item { font-size: 0.7rem; padding: 0 12px; }
 .trust-strip .container { animation-duration: 15s; }
@@ -891,12 +894,25 @@ text-align: center;
 .header-actions { flex-wrap: wrap; }
 .search-wrap { margin: 8px 0; }
 .search-wrap input { font-size: 0.9rem; }
-.category-card { min-width: 140px; }
-.category-card h3 { font-size: 0.9rem; }
-.category-card .count { font-size: 0.75rem; }
-.product-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
-.product-card h3 { font-size: 0.85rem; line-height: 1.2; }
-.product-card .price { font-size: 0.9rem; }
+.category-card { min-width: 120px; padding: 12px; }
+.category-card h3 { font-size: 0.85rem; }
+.category-card .count { font-size: 0.7rem; }
+.product-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+.product-card { padding: 10px; }
+.product-card img { height: 100px; object-fit: cover; }
+.product-card h3 { font-size: 0.8rem; line-height: 1.3; margin: 8px 0 4px; }
+.product-card .price { font-size: 0.85rem; }
+.product-card .specs { font-size: 0.7rem; }
+}
+
+@media (max-width: 380px) {
+.container { padding: 0 6px; }
+.product-grid { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 8px; }
+.product-card { padding: 8px; }
+.product-card img { height: 90px; }
+.product-card h3 { font-size: 0.75rem; }
+.category-card { min-width: 100px; padding: 8px; }
+.category-card h3 { font-size: 0.8rem; }
 }
 
 /* Scrollende tekst animatie van links naar rechts */
@@ -917,6 +933,10 @@ position: relative;
 height: 40px;
 display: flex;
 align-items: center;
+background: #f8faff;
+color: #1d2433;
+font-size: 0.84rem;
+border-bottom: 1px solid #dce8fd;
 }
 
 .trust-strip .container {
@@ -933,6 +953,9 @@ animation-play-state: paused;
 padding: 0 20px;
 white-space: nowrap;
 flex-shrink: 0;
+color: #1d2433;
+text-decoration: none;
+display: inline-block;
 }
 </style>
 </head>
