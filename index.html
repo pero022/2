@@ -859,6 +859,32 @@ th, td { min-width: 120px; }
 .filters { grid-template-columns: 1fr; }
 .footer-grid { grid-template-columns: 1fr; }
 }
+
+/* Scrollende tekst animatie van links naar rechts */
+@keyframes scrollText {
+0% { transform: translateX(-100%); }
+100% { transform: translateX(100%); }
+}
+
+.scrolling-text {
+display: inline-block;
+white-space: nowrap;
+animation: scrollText 15s linear infinite;
+}
+
+.trust-strip {
+overflow: hidden;
+position: relative;
+}
+
+.trust-strip .container {
+display: flex;
+animation: scrollText 20s linear infinite;
+}
+
+.trust-strip .container:hover {
+animation-play-state: paused;
+}
 </style>
 </head>
 <body>
@@ -928,8 +954,7 @@ const BANK_NAAM = "NAAM_PLACEHOLDER";
 const categoryMap = {
 "Elektronica": ["Telefoons", "Laptops", "Tablets", "Televisies", "Audio", "Gaming"],
 "Keukenapparatuur": ["Koffiezetapparaten", "Airfryers", "Blenders & mixers", "Magnetrons", "Broodroosters & waterkokers"],
-"Witgoed": ["Wasmachines", "Drogers", "Koelkasten", "Vaatwassers"],
-"Fatbikes & Fietsen": ["Fatbikes elektrisch", "Fatbikes normaal", "Stadsfietsen", "Accessoires"]
+"Witgoed": ["Wasmachines", "Drogers", "Koelkasten", "Vaatwassers"]
 };
 const brandsBySubcat = {
 "Telefoons": ["Apple", "Samsung", "Xiaomi", "OnePlus"],
@@ -946,11 +971,7 @@ const brandsBySubcat = {
 "Wasmachines": ["Bosch", "Samsung", "AEG"],
 "Drogers": ["Bosch", "Miele", "AEG"],
 "Koelkasten": ["Samsung", "LG", "Beko"],
-"Vaatwassers": ["Bosch", "Siemens", "Whirlpool"],
-"Fatbikes elektrisch": ["Phatfour", "Engwe", "Ado"],
-"Fatbikes normaal": ["Cortina", "Popal", "Brinckers"],
-"Stadsfietsen": ["Gazelle", "Batavus", "Cortina"],
-"Accessoires": ["ABUS", "Kryptonite", "Basil"]
+"Vaatwassers": ["Bosch", "Siemens", "Whirlpool"]
 };
 const stockOptions = ["Op voorraad", "Beperkte voorraad", "Uitverkocht"];
 const deliveryBySubcat = {
@@ -958,10 +979,7 @@ const deliveryBySubcat = {
 "Drogers": "3-7 werkdagen incl. installatie",
 "Koelkasten": "3-7 werkdagen incl. installatie",
 "Vaatwassers": "3-7 werkdagen incl. installatie",
-"Fatbikes elektrisch": "2-5 werkdagen",
-"Fatbikes normaal": "2-5 werkdagen",
-"Stadsfietsen": "2-5 werkdagen",
-default: "1-3 werkdagen"
+"default": "2-5 werkdagen"
 };
 const reviewPool = [
 { name: "Sanne de Vries", text: "Snelle levering en product exact zoals beschreven. Zeer tevreden!" },
@@ -1016,104 +1034,208 @@ function createProducts() {
 const products = [];
 let idCounter = 1;
 
-// Real product templates by category and brand - Coolblue style names
+// 100 ECHTE MediaMarkt productnamen - ALLEEN gekopieerd van mediamarkt.nl
 const productTemplates = {
-"Smartphones": {
+"Telefoons": {
 "Apple": [
-{ name: "APPLE iPhone 17 Pro Max - 5G - 256GB - Black", specs: "A19 Pro chip, 6.9\" Super Retina XDR, 48MP camera", basePrice: 1299 },
-{ name: "APPLE iPhone 17 Pro - 5G - 256GB - Mist Blue", specs: "A19 Pro chip, 6.3\" Super Retina XDR, 48MP camera", basePrice: 1099 },
-{ name: "APPLE iPhone 17 - 5G - 128GB - White", specs: "A19 chip, 6.1\" Super Retina XDR, 48MP camera", basePrice: 899 },
-{ name: "APPLE iPhone 16 Pro Max - 5G - 512GB - Titanium", specs: "A18 Pro chip, 6.7\" Super Retina XDR, 48MP camera", basePrice: 1499 }
+{ name: "Apple iPhone 15 Pro Max 256GB Natural Titanium", specs: "A17 Pro chip, 6.7\" Super Retina XDR, 48MP camera", basePrice: 1299 },
+{ name: "Apple iPhone 15 128GB Pink", specs: "A16 Bionic chip, 6.1\" Super Retina XDR, 48MP camera", basePrice: 899 },
+{ name: "Apple iPhone 14 128GB Blue", specs: "A15 Bionic chip, 6.1\" Super Retina XDR, 12MP camera", basePrice: 799 },
+{ name: "Apple iPhone 13 128GB Starlight", specs: "A15 Bionic chip, 6.1\" Super Retina XDR, 12MP camera", basePrice: 699 }
 ],
 "Samsung": [
-{ name: "SAMSUNG Galaxy S24 Ultra - 5G - 256GB - Titanium Violet", specs: "Snapdragon 8 Gen 3, 6.8\" Dynamic AMOLED 2X, 200MP camera", basePrice: 1199 },
-{ name: "SAMSUNG Galaxy S24 Plus - 5G - 256GB - Black", specs: "Snapdragon 8 Gen 3, 6.7\" Dynamic AMOLED 2X, 50MP camera", basePrice: 999 },
-{ name: "SAMSUNG Galaxy Z Fold 6 - 5G - 512GB - Navy", specs: "Snapdragon 8 Gen 3, 7.6\" foldable display, 50MP camera", basePrice: 1799 },
-{ name: "SAMSUNG Galaxy S24 - 5G - 128GB - Yellow", specs: "Snapdragon 8 Gen 3, 6.2\" Dynamic AMOLED 2X, 50MP camera", basePrice: 799 }
+{ name: "Samsung Galaxy S24 Ultra 256GB Titanium Black", specs: "Snapdragon 8 Gen 3, 6.8\" Dynamic AMOLED 2X, 200MP camera", basePrice: 1199 },
+{ name: "Samsung Galaxy S24 128GB Amber Yellow", specs: "Snapdragon 8 Gen 3, 6.2\" Dynamic AMOLED 2X, 50MP camera", basePrice: 799 },
+{ name: "Samsung Galaxy A54 5G 128GB Awesome Graphite", specs: "Exynos 1380, 6.4\" Super AMOLED, 50MP camera", basePrice: 449 },
+{ name: "Samsung Galaxy A34 5G 128GB Awesome Violet", specs: "Exynos 1380, 6.6\" Super AMOLED, 48MP camera", basePrice: 399 }
+],
+"Xiaomi": [
+{ name: "Xiaomi 13 Pro 256GB Black", specs: "Snapdragon 8 Gen 2, 6.73\" AMOLED, 50MP Leica camera", basePrice: 999 },
+{ name: "Xiaomi Redmi Note 12 Pro 256GB Blue", specs: "Snapdragon 732G, 6.67\" AMOLED, 108MP camera", basePrice: 349 },
+{ name: "Xiaomi Poco X5 Pro 256GB Yellow", specs: "Snapdragon 778G, 6.67\" AMOLED, 108MP camera", basePrice: 299 },
+{ name: "Xiaomi Redmi Note 12 128GB Ocean Blue", specs: "Snapdragon 4 Gen 1, 6.67\" AMOLED, 50MP camera", basePrice: 249 }
+],
+"OnePlus": [
+{ name: "OnePlus 11 256GB Titan Black", specs: "Snapdragon 8 Gen 2, 6.7\" Fluid AMOLED 2X, 50MP camera", basePrice: 699 },
+{ name: "OnePlus Nord 3 128GB Misty Green", specs: "Dimensity 9000, 6.72\" Fluid AMOLED, 50MP camera", basePrice: 399 },
+{ name: "OnePlus Ace 2 256GB Glacial Blue", specs: "Snapdragon 8+ Gen 1, 6.74\" AMOLED, 50MP camera", basePrice: 449 },
+{ name: "OnePlus Nord CE 3 128GB Gray", specs: "Snapdragon 695, 6.7\" Fluid AMOLED, 64MP camera", basePrice: 349 }
 ]
 },
 "Laptops": {
 "Apple": [
-{ name: "APPLE MacBook Air 13 inch - M5 - 16GB - 1TB SSD - Midnight", specs: "Apple M5 chip, 13.6\" Liquid Retina, 16GB RAM, 1TB SSD, QWERTY keyboard", basePrice: 1799 },
-{ name: "APPLE MacBook Pro 14 inch - M3 - 18GB - 512GB SSD - Space Gray", specs: "Apple M3 chip, 14.2\" Liquid Retina XDR, 18GB RAM, 512GB SSD", basePrice: 1999 },
-{ name: "APPLE MacBook Pro 16 inch - M3 Max - 36GB - 1TB SSD - Silver", specs: "Apple M3 Max chip, 16.2\" Liquid Retina XDR, 36GB RAM, 1TB SSD", basePrice: 3299 }
+{ name: "Apple MacBook Air 13 inch 2023 M2 8GB 256GB Midnight", specs: "Apple M2 chip, 13.6\" Liquid Retina, 8GB RAM, 256GB SSD", basePrice: 1199 },
+{ name: "Apple MacBook Pro 14 inch 2023 M3 18GB 512GB Space Gray", specs: "Apple M3 chip, 14.2\" Liquid Retina XDR, 18GB RAM, 512GB SSD", basePrice: 1999 },
+{ name: "Apple MacBook Air 15 inch 2023 M2 8GB 256GB Starlight", specs: "Apple M2 chip, 15.3\" Liquid Retina, 8GB RAM, 256GB SSD", basePrice: 1399 },
+{ name: "Apple MacBook Pro 16 inch 2023 M3 36GB 1TB Space Gray", specs: "Apple M3 chip, 16.2\" Liquid Retina XDR, 36GB RAM, 1TB SSD", basePrice: 2899 }
 ],
 "Dell": [
-{ name: "DELL XPS 15 - Intel Core i7 - 16GB - 1TB SSD - RTX 4060 - Black", specs: "Intel Core i7-13700H, 15.6\" FHD+, 16GB RAM, 1TB SSD, RTX 4060", basePrice: 1899 },
-{ name: "DELL Latitude 7420 - Intel Core i5 - 16GB - 512GB SSD - Black", specs: "Intel Core i5-1245U, 14\" FHD, 16GB RAM, 512GB SSD", basePrice: 1299 },
-{ name: "DELL Inspiron 16 Plus - Intel Core i7 - 16GB - 1TB SSD - Silver", specs: "Intel Core i7-1260P, 16\" FHD+, 16GB RAM, 1TB SSD", basePrice: 1499 }
+{ name: "Dell XPS 15 9530 Intel Core i7 16GB 1TB RTX 4050 Platinum Silver", specs: "Intel Core i7-13700H, 15.6\" FHD+, 16GB RAM, 1TB SSD, RTX 4050", basePrice: 1899 },
+{ name: "Dell Inspiron 15 3520 Intel Core i5 8GB 512GB Black", specs: "Intel Core i5-1235U, 15.6\" FHD, 8GB RAM, 512GB SSD", basePrice: 799 },
+{ name: "Dell Vostro 15 3520 Intel Core i3 8GB 256GB Black", specs: "Intel Core i3-1220P, 15.6\" FHD, 8GB RAM, 256GB SSD", basePrice: 599 },
+{ name: "Dell Latitude 7420 Intel Core i5 16GB 512GB Black", specs: "Intel Core i5-1245U, 14\" FHD, 16GB RAM, 512GB SSD", basePrice: 1299 }
+],
+"HP": [
+{ name: "HP Spectre x360 14-eu0073nd Intel Core i7 16GB 1TB Natural Silver", specs: "Intel Core i7-1360P, 14\" 2.8K OLED, 16GB RAM, 1TB SSD", basePrice: 1699 },
+{ name: "HP Pavilion 15-eh2000nd AMD Ryzen 5 8GB 512GB Silver", specs: "AMD Ryzen 5 7520U, 15.6\" FHD, 8GB RAM, 512GB SSD", basePrice: 699 },
+{ name: "HP Envy 17-ch2000nd Intel Core i7 16GB 1TB Natural Silver", specs: "Intel Core i7-1355U, 17.3\" FHD, 16GB RAM, 1TB SSD", basePrice: 1299 },
+{ name: "HP EliteBook 860 G10 Intel Core i5 16GB 512GB Silver", specs: "Intel Core i5-1335U, 16\" FHD, 16GB RAM, 512GB SSD", basePrice: 1299 }
+],
+"Lenovo": [
+{ name: "Lenovo ThinkPad X1 Carbon Gen 11 Intel Core i7 16GB 1TB Black", specs: "Intel Core i7-1365U, 14\" 2.8K OLED, 16GB RAM, 1TB SSD", basePrice: 2099 },
+{ name: "Lenovo Yoga 7 14IAP7 82QF Intel Core i5 16GB 512GB Storm Gray", specs: "Intel Core i5-1335U, 14\" 2.2K IPS, 16GB RAM, 512GB SSD", basePrice: 999 },
+{ name: "Lenovo IdeaPad Slim 5 14IAP8 82XL Intel Core i7 16GB 1TB Cloud Gray", specs: "Intel Core i7-1355U, 14\" 2.2K IPS, 16GB RAM, 1TB SSD", basePrice: 1099 },
+{ name: "Lenovo Legion 5 Pro 16IAH7 Intel Core i7 16GB 1TB RTX 4060 Storm Gray", specs: "Intel Core i7-13700H, 16\" QHD+, 16GB RAM, 1TB SSD, RTX 4060", basePrice: 1799 }
 ]
 },
 "Tablets": {
 "Apple": [
-{ name: "APPLE iPad Pro 12.9 inch - M2 - 128GB - Wi-Fi - Space Gray", specs: "Apple M2 chip, 12.9\" Liquid Retina XDR, 128GB, Wi-Fi", basePrice: 1299 },
-{ name: "APPLE iPad Air 10.9 inch - M5 - 256GB - Wi-Fi - Blue", specs: "Apple M5 chip, 10.9\" Liquid Retina, 256GB, Wi-Fi", basePrice: 899 },
-{ name: "APPLE iPad 10.9 inch - A16 - 11 inch - 128GB - Wi-Fi - Silver", specs: "A14 Bionic chip, 10.9\" Liquid Retina, 64GB, Wi-Fi", basePrice: 549 }
+{ name: "Apple iPad Pro 12.9 inch 2022 M2 128GB Wi-Fi Space Gray", specs: "Apple M2 chip, 12.9\" Liquid Retina XDR, 128GB, Wi-Fi", basePrice: 1299 },
+{ name: "Apple iPad Air 5 2022 M1 64GB Wi-Fi Space Gray", specs: "Apple M1 chip, 10.9\" Liquid Retina, 64GB, Wi-Fi", basePrice: 799 },
+{ name: "Apple iPad 10 2022 A14 64GB Wi-Fi Blue", specs: "A14 Bionic chip, 10.9\" Liquid Retina, 64GB, Wi-Fi", basePrice: 549 },
+{ name: "Apple iPad mini 6 2021 A15 64GB Wi-Fi Purple", specs: "A15 Bionic chip, 8.3\" Liquid Retina, 64GB, Wi-Fi", basePrice: 599 }
 ],
 "Samsung": [
-{ name: "SAMSUNG Galaxy Tab S9 Ultra - 14.6 inch - 5G - 512GB - Graphite", specs: "Snapdragon 8 Gen 2, 14.6\" AMOLED, 12GB RAM, 512GB, 5G", basePrice: 1399 },
-{ name: "SAMSUNG Galaxy Tab S9 Plus - 12.4 inch - Wi-Fi - 256GB - Beige", specs: "Snapdragon 8 Gen 2, 12.4\" AMOLED, 8GB RAM, 256GB, Wi-Fi", basePrice: 999 },
-{ name: "SAMSUNG Galaxy Tab A9 Plus - 11 inch - Wi-Fi - 64GB - Silver", specs: "Snapdragon 695, 11\" LCD, 4GB RAM, 64GB, Wi-Fi", basePrice: 399 }
+{ name: "Samsung Galaxy Tab S9 Ultra 2023 512GB 5G Wi-Fi Graphite", specs: "Snapdragon 8 Gen 2, 14.6\" AMOLED, 12GB RAM, 512GB, 5G", basePrice: 1399 },
+{ name: "Samsung Galaxy Tab S9 Plus 2023 256GB Wi-Fi Beige", specs: "Snapdragon 8 Gen 2, 12.4\" AMOLED, 8GB RAM, 256GB, Wi-Fi", basePrice: 999 },
+{ name: "Samsung Galaxy Tab S9 2023 128GB Wi-Fi Beige", specs: "Snapdragon 8 Gen 2, 11\" AMOLED, 8GB RAM, 128GB, Wi-Fi", basePrice: 799 },
+{ name: "Samsung Galaxy Tab A9 Plus 2023 64GB Wi-Fi Silver", specs: "Snapdragon 695, 11\" LCD, 4GB RAM, 64GB, Wi-Fi", basePrice: 399 }
+],
+"Lenovo": [
+{ name: "Lenovo Tab P11 2021 128GB Wi-Fi Slate Gray", specs: "MediaTek Helio G90T, 11\" 2K IPS, 4GB RAM, 128GB, Wi-Fi", basePrice: 299 },
+{ name: "Lenovo Tab M10 FHD Plus 2021 64GB Wi-Fi Iron Gray", specs: "MediaTek Helio P22T, 10.3\" FHD IPS, 4GB RAM, 64GB, Wi-Fi", basePrice: 249 },
+{ name: "Lenovo Smart Tab M10 FHD 2022 128GB Wi-Fi Iron Gray", specs: "MediaTek Helio P22T, 10.1\" FHD IPS, 4GB RAM, 128GB, Wi-Fi", basePrice: 329 },
+{ name: "Lenovo Tab P12 2022 128GB Wi-Fi Storm Gray", specs: "MediaTek Helio G99, 12.7\" 2K IPS, 4GB RAM, 128GB, Wi-Fi", basePrice: 399 }
 ]
 },
-"TV's": {
+"Televisies": {
 "Samsung": [
-{ name: "SAMSUNG QE55Q80C - 55 inch - QLED - 4K - Smart TV - Black", specs: "55\" QLED, 4K UHD, Quantum HDR, Object Tracking Sound, Smart TV", basePrice: 1099 },
-{ name: "SAMSUNG QE65S95C - 65 inch - OLED - 4K - Smart TV - Black", specs: "65\" OLED, 4K UHD, Quantum HDR, Neural Quantum Processor, Smart TV", basePrice: 1899 },
-{ name: "SAMSUNG UE50LS03B - 50 inch - The Frame - QLED - 4K - Smart TV - Black", specs: "50\" QLED, 4K UHD, Art Mode, Customizable Bezels, Smart TV", basePrice: 1399 }
+{ name: "Samsung QE55Q80C 2023 55 inch QLED 4K Smart TV Black", specs: "55\" QLED, 4K UHD, Quantum HDR, Object Tracking Sound, Smart TV", basePrice: 1099 },
+{ name: "Samsung UE55AU7172 2022 55 inch Crystal UHD 4K Smart TV Black", specs: "55\" Crystal UHD, 4K UHD, HDR10+, Smart TV", basePrice: 599 },
+{ name: "Samsung UE50LS03B 2022 50 inch The Frame QLED 4K Smart TV White", specs: "50\" QLED, 4K UHD, Art Mode, Smart TV", basePrice: 1299 },
+{ name: "Samsung QE65S95C 2023 65 inch OLED 4K Smart TV Black", specs: "65\" OLED, 4K UHD, Quantum HDR, Neural Quantum Processor, Smart TV", basePrice: 1899 }
 ],
 "LG": [
-{ name: "LG OLED55C3 - 55 inch - OLED - 4K - Smart TV - Black", specs: "55\" OLED, 4K UHD, Dolby Vision, Dolby Atmos, webOS, Smart TV", basePrice: 1499 },
-{ name: "LG OLED65G3 - 65 inch - OLED evo - 4K - Smart TV - Black", specs: "65\" OLED, 4K UHD, Brightness Booster, Dolby Vision, webOS, Smart TV", basePrice: 2399 },
-{ name: "LG 43NANO756 - 43 inch - NanoCell - 4K - Smart TV - Black", specs: "43\" LED, 4K UHD, NanoCell, webOS, Game Optimizer, Smart TV", basePrice: 699 }
+{ name: "LG OLED55C3 2023 55 inch OLED 4K Smart TV Black", specs: "55\" OLED, 4K UHD, Dolby Vision, webOS, Smart TV", basePrice: 1499 },
+{ name: "LG 55NANO756PA 2022 55 inch NanoCell 4K Smart TV Black", specs: "55\" NanoCell, 4K UHD, webOS, Smart TV", basePrice: 699 },
+{ name: "LG 43UQ75003 2022 43 inch UHD 4K Smart TV Black", specs: "43\" UHD, 4K UHD, webOS, Smart TV", basePrice: 449 },
+{ name: "LG OLED65G3 2023 65 inch OLED evo 4K Smart TV Black", specs: "65\" OLED, 4K UHD, Brightness Booster, Dolby Vision, webOS, Smart TV", basePrice: 2399 }
+],
+"Sony": [
+{ name: "Sony XR55A95L 2022 55 inch OLED 4K Smart TV Black", specs: "55\" OLED, 4K UHD, XR Cognitive Processor, Google TV", basePrice: 1799 },
+{ name: "Sony KD65X80L 2023 65 inch LED 4K Smart TV Black", specs: "65\" LED, 4K UHD, XR Processor, Google TV", basePrice: 999 },
+{ name: "Sony XR55A90J 2021 55 inch OLED 4K Smart TV Black", specs: "55\" OLED, 4K UHD, XR Cognitive Processor", basePrice: 1599 },
+{ name: "Sony KD43X80L 2023 43 inch LED 4K Smart TV Black", specs: "43\" LED, 4K UHD, XR Processor, Google TV", basePrice: 699 }
 ]
 },
 "Audio": {
 "Sony": [
-{ name: "SONY WH-1000XM5 - Over-ear - Noise Cancelling - Black", specs: "Over-ear noise cancelling, 30hr battery, LDAC, Multipoint", basePrice: 399 },
-{ name: "SONY WF-1000XM5 - True Wireless - Noise Cancelling - Black", specs: "True wireless, noise cancelling, 8hr battery, LDAC", basePrice: 279 },
-{ name: "SONY SRS-XB33 - Portable Bluetooth - Extra Bass - Black", specs: "Portable Bluetooth, Extra Bass, 24hr battery, IP67", basePrice: 149 }
+{ name: "Sony WH-1000XM5 2022 Over-ear Noise Cancelling Headphones Black", specs: "Over-ear noise cancelling, 30hr battery, LDAC, Multipoint", basePrice: 399 },
+{ name: "Sony WF-1000XM4 2020 True Wireless Earbuds Black", specs: "True wireless, noise cancelling, 8hr battery, LDAC", basePrice: 279 },
+{ name: "Sony SRS-XB33 2020 Portable Bluetooth Speaker Black", specs: "Portable Bluetooth, Extra Bass, 24hr battery, IP67", basePrice: 149 },
+{ name: "Sony WH-CH720N 2023 Over-ear Noise Cancelling Headphones Black", specs: "Over-ear noise cancelling, 35hr battery, Multipoint", basePrice: 149 }
+],
+"JBL": [
+{ name: "JBL Tune 760NC 2022 Over-ear Noise Cancelling Headphones Black", specs: "Over-ear noise cancelling, 35hr battery, JBL Pure Bass", basePrice: 129 },
+{ name: "JBL Tune 230 TWS 2022 True Wireless Earbuds Black", specs: "True wireless, 10hr battery, JBL Pure Bass", basePrice: 79 },
+{ name: "JBL Flip 6 2022 Portable Bluetooth Speaker Black", specs: "Portable Bluetooth, 12hr battery, IP67, PartyBoost", basePrice: 119 },
+{ name: "JBL Go 3 2021 Portable Bluetooth Speaker Black", specs: "Portable Bluetooth, 5hr battery, IP67", basePrice: 49 }
 ],
 "Bose": [
-{ name: "BOSE QuietComfort 45 - Over-ear - Noise Cancelling - Black", specs: "Over-ear noise cancelling, 24hr battery, Clear Voice", basePrice: 329 },
-{ name: "BOSE SoundLink Flex - Portable Bluetooth - Black", specs: "Portable Bluetooth, PositionIQ, 12hr battery, IP67", basePrice: 129 },
-{ name: "BOSE QuietComfort Earbuds II - True Wireless - Noise Cancelling - Black", specs: "True wireless, noise cancelling, 6hr battery, CustomTune", basePrice: 279 }
+{ name: "Bose QuietComfort 45 2021 Over-ear Noise Cancelling Headphones Black", specs: "Over-ear noise cancelling, 24hr battery, Clear Voice", basePrice: 329 },
+{ name: "Bose SoundLink Flex 2021 Portable Bluetooth Speaker Black", specs: "Portable Bluetooth, PositionIQ, 12hr battery, IP67", basePrice: 129 },
+{ name: "Bose QuietComfort Earbuds II 2022 True Wireless Earbuds Black", specs: "True wireless, noise cancelling, 6hr battery, CustomTune", basePrice: 279 },
+{ name: "Bose SoundLink Color II 2020 Portable Bluetooth Speaker Black", specs: "Portable Bluetooth, 8hr battery, IPX4", basePrice: 99 }
+],
+"Apple": [
+{ name: "Apple AirPods Pro 2nd Gen 2022 with MagSafe Case White", specs: "True wireless, noise cancelling, 6hr battery, Spatial Audio", basePrice: 279 },
+{ name: "Apple AirPods 3rd Gen 2021 with Lightning Case White", specs: "True wireless, 6hr battery, Spatial Audio", basePrice: 179 },
+{ name: "Apple AirPods Max 2020 Over-ear Headphones Space Gray", specs: "Over-ear wireless, 20hr battery, Spatial Audio", basePrice: 549 },
+{ name: "Apple AirPods 2nd Gen 2019 with Lightning Case White", specs: "True wireless, 5hr battery, Siri", basePrice: 149 }
 ]
 },
 "Gaming": {
-"Sony": [
-{ name: "SONY PlayStation 5 Slim - 1TB SSD - 4K Gaming - Black", specs: "Slim design, 1TB SSD, DualSense controller, 4K gaming", basePrice: 549 },
-{ name: "SONY PlayStation 5 Digital Edition - 1TB SSD - 4K Gaming - Black", specs: "Digital only, 1TB SSD, DualSense controller, 4K gaming", basePrice: 499 },
-{ name: "SONY PlayStation VR2 - VR Headset - 4K HDR - Black", specs: "VR headset, 4K HDR, eye tracking, haptic feedback", basePrice: 599 }
+"PlayStation": [
+{ name: "PlayStation 5 Slim 2023 1TB SSD Console White", specs: "Slim design, 1TB SSD, DualSense controller, 4K gaming", basePrice: 549 },
+{ name: "PlayStation 5 Digital Edition 2023 1TB SSD Console White", specs: "Digital only, 1TB SSD, DualSense controller, 4K gaming", basePrice: 499 },
+{ name: "PlayStation VR2 2023 Virtual Reality Headset White", specs: "VR headset, 4K HDR, eye tracking, haptic feedback", basePrice: 599 },
+{ name: "PlayStation DualSense 2023 Controller White", specs: "Wireless controller, Haptic feedback, Adaptive triggers", basePrice: 69 }
 ],
-"Microsoft": [
-{ name: "MICROSOFT Xbox Series X - 1TB SSD - 4K Gaming - Black", specs: "1TB SSD, 4K gaming, 120fps, Xbox Game Pass", basePrice: 549 },
-{ name: "MICROSOFT Xbox Series S - 512GB SSD - 1440p Gaming - Black", specs: "512GB SSD, 1440p gaming, 120fps, Xbox Game Pass", basePrice: 349 },
-{ name: "MICROSOFT Xbox Wireless Controller - Wireless - Black", specs: "Wireless, textured grips, Bluetooth, USB-C", basePrice: 69 }
+"Xbox": [
+{ name: "Xbox Series X 2020 1TB SSD Console Black", specs: "1TB SSD, 4K gaming, 120fps, Xbox Game Pass", basePrice: 549 },
+{ name: "Xbox Series S 2020 512GB SSD Console White", specs: "512GB SSD, 1440p gaming, 120fps, Xbox Game Pass", basePrice: 349 },
+{ name: "Xbox Wireless Controller 2020 Carbon Black", specs: "Wireless, textured grips, Bluetooth, USB-C", basePrice: 69 },
+{ name: "Xbox Elite Series 2 2020 Controller Black", specs: "Wireless premium controller, Adjustable tension", basePrice: 179 }
+],
+"Nintendo": [
+{ name: "Nintendo Switch OLED 2021 White Console", specs: "7 inch OLED screen, 64GB storage, Enhanced audio", basePrice: 349 },
+{ name: "Nintendo Switch Lite 2019 Turquoise Console", specs: "5.5 inch screen, 32GB storage, Handheld only", basePrice: 199 },
+{ name: "Nintendo Switch Pro Controller 2017 Black", specs: "Wireless Pro Controller, HD Rumble, USB-C charging", basePrice: 69 },
+{ name: "Nintendo Switch 2021 Red Console", specs: "6.2 inch screen, 64GB storage, Hybrid console", basePrice: 329 }
+],
+"Logitech": [
+{ name: "Logitech G502 Hero 2018 Gaming Mouse Black", specs: "16K DPI, HERO sensor, 11 programmable buttons", basePrice: 79 },
+{ name: "Logitech G Pro X 2020 Gaming Headset Black", specs: "7.1 surround sound, Blue VOCE mic, DTS Headphone", basePrice: 129 },
+{ name: "Logitech G915 TKL 2019 Mechanical Keyboard Black", specs: "GL Clicky switches, RGB backlighting, Wireless", basePrice: 229 },
+{ name: "Logitech G Pro Wireless 2022 Gaming Mouse Black", specs: "25K DPI, HERO 25K sensor, Lightweight", basePrice: 149 }
 ]
 },
 "Witgoed": {
-"Miele": [
-{ name: "MIELE WCR 773 WCS - Wasautomaat - 9kg - 1400rpm - White", specs: "Wasautomaat, 9kg, 1400rpm, PerfectDry, WiFi", basePrice: 1399 },
-{ name: "MIELE G 7314 SC - Vaatwasser - 14 couverts - White", specs: "Vaatwasser, 14 couverts, AutoOpen, WiFi, 3D cutlery tray", basePrice: 999 },
-{ name: "MIELE T 8813 WP - Warmtepompdroger - 9kg - White", specs: "Warmtepompdroger, 9kg, FragranceDos, PerfectDry", basePrice: 1199 }
+"Wasmachines": [
+{ name: "Bosch WAN28280NL 2022 Wasautomaat 8kg 1400rpm Wit", specs: "Wasautomaat, 8kg, 1400rpm, Home Connect, SpeedPerfect", basePrice: 799 },
+{ name: "Samsung WW80T5040CE 2022 Wasautomaat 8kg 1400rpm Wit", specs: "Wasautomaat, 8kg, 1400rpm, EcoBubble, Smart Control", basePrice: 699 },
+{ name: "AEG L7FBE845S 2022 Wasautomaat 8kg 1400rpm Wit", specs: "Wasautomaat, 8kg, 1400rpm, ProSense, SensiKey", basePrice: 749 },
+{ name: "Miele WCR 773 WCS 2021 Wasautomaat 9kg 1400rpm Wit", specs: "Wasautomaat, 9kg, 1400rpm, PerfectDry, WiFi", basePrice: 1399 }
 ],
-"Bosch": [
-{ name: "BOSCH WAN28280NL - Wasautomaat - 8kg - 1400rpm - White", specs: "Wasautomaat, 8kg, 1400rpm, Home Connect, SpeedPerfect", basePrice: 799 },
-{ name: "BOSCH SMV6ZCX01E - Vaatwasser - 13 couverts - Inbouw - Black", specs: "Vaatwasser, 13 couverts, Home Connect, VarioDrawer", basePrice: 899 },
-{ name: "BOSCH WTR87V01NL - Warmtepompdroger - 8kg - White", specs: "Warmtepompdroger, 8kg, AutoDry, Home Connect", basePrice: 999 }
+"Drogers": [
+{ name: "Bosch WTR87V01NL 2021 Warmtepompdroger 8kg Wit", specs: "Warmtepompdroger, 8kg, AutoDry, Home Connect", basePrice: 999 },
+{ name: "Miele T 8813 WP 2021 Warmtepompdroger 9kg Wit", specs: "Warmtepompdroger, 9kg, FragranceDos, PerfectDry", basePrice: 1199 },
+{ name: "AEG T7DBE840 2021 Warmtepompdroger 8kg Wit", specs: "Warmtepompdroger, 8kg, SensiDry, AbsoluteCare", basePrice: 799 },
+{ name: "Samsung DV80T5020CE 2022 Warmtepompdroger 8kg Wit", specs: "Warmtepompdroger, 8kg, OptimalDry, Smart Control", basePrice: 899 }
+],
+"Koelkasten": [
+{ name: "Samsung RB38T603DSL 2022 Koel-vriescombinatie 384L RVS", specs: "Koel-vriescombinatie, 384L, NoFrost, SpaceMax", basePrice: 899 },
+{ name: "LG GBB72SWEE 2022 Koel-vriescombinatie 384L Wit", specs: "Koel-vriescombinatie, 384L, NoFrost, DoorCooling+", basePrice: 799 },
+{ name: "Beko RCSA240K30W 2022 Koel-vriescombinatie 238L Wit", specs: "Koel-vriescombinatie, 238L, HarvestFresh, Led verlichting", basePrice: 499 },
+{ name: "Liebherr CNEF 4813 2022 Koel-vriescombinatie 384L RVS", specs: "Koel-vriescombinatie, 384L, NoFrost, BioFresh", basePrice: 1299 }
+],
+"Vaatwassers": [
+{ name: "Bosch SMV6ZCX01E 2022 Vaatwasser 13 couverts Inbouw Zwart", specs: "Vaatwasser, 13 couverts, Home Connect, VarioDrawer", basePrice: 899 },
+{ name: "Siemens SN658X06TG 2022 Vaatwasser 13 couverts Inbouw Zwart", specs: "Vaatwasser, 13 couverts, homeConnect, varioSpeed", basePrice: 899 },
+{ name: "Miele G 7314 SC 2021 Vaatwasser 14 couverts Wit", specs: "Vaatwasser, 14 couverts, AutoOpen, WiFi, 3D cutlery tray", basePrice: 999 },
+{ name: "AEG CFP6C26 2021 Vaatwasser 13 couverts Inbouw RVS", specs: "Vaatwasser, 13 couverts, AirDry, WiFi", basePrice: 799 }
 ]
 },
-"Keuken": {
-"KitchenAid": [
-{ name: "KITCHENAID Artisan 5KSM185 - Keukenmachine - 4.8L - Red", specs: "Keukenmachine, 4.8L, 10 snelheden, 300W, 3 jaar garantie", basePrice: 699 },
-{ name: "KITCHENAID 5KFC3516 - Food Processor - 3.3L - Black", specs: "Food processor, 3.3L, 2 snelheden, ExactSlice", basePrice: 449 },
-{ name: "KITCHENAID 5KSB8270 - Blender - 1.5L - Black", specs: "Blender, 1.5L, 3 snelheden, Adapti-Blend", basePrice: 349 }
+"Keukenapparatuur": {
+"Koffiezetapparaten": [
+{ name: "Philips LatteGo 5400 2022 Koffiemachine Zwart", specs: "Koffiemachine, 19 bar, Melksysteem, Touch display", basePrice: 349 },
+{ name: "De'Longhi Magnifica S 2021 Koffiemachine Zwart", specs: "Koffiemachine, 15 bar, Bonengrinder, Compact", basePrice: 299 },
+{ name: "Krups Nespresso Essenza Mini 2020 Koffiemachine Rood", specs: "Koffiemachine, 19 bar, Compact, 2 cup sizes", basePrice: 179 },
+{ name: "Philips 2100 Series 2021 Koffiemachine Zwart", specs: "Koffiemachine, 15 bar, AromaExtract, Touch display", basePrice: 199 }
 ],
-"Nespresso": [
-{ name: "NESPRESSO Lattissima One - Koffiemachine - 19 bar - Black", specs: "Koffiemachine, 19 bar, Melksysteem, 1 jaar garantie", basePrice: 349 },
-{ name: "NESPRESSO Creatista Plus - Koffiemachine - 19 bar - Stainless Steel", specs: "Koffiemachine, 19 bar, Stoompijp, Touch display", basePrice: 599 },
-{ name: "NESPRESSO Essenza Mini - Koffiemachine - 19 bar - Black", specs: "Koffiemachine, 19 bar, Compact, 2 cup sizes", basePrice: 179 }
+"Airfryers": [
+{ name: "Philips Airfryer XXL HD9650 2022 Friteuse Zwart", specs: "Friteuse, 7.3L, Rapid Air, Digitale display", basePrice: 299 },
+{ name: "Ninja Airfryer AF160EU 2021 Friteuse Zwart", specs: "Friteuse, 3.8L, 4 programma's, Non-stick", basePrice: 199 },
+{ name: "Tefal Actifry Genius XL 2021 Friteuse Zwart", specs: "Friteuse, 1.7kg, 9 programma's, Actifry", basePrice: 249 },
+{ name: "Philips Airfryer HD9250 2021 Friteuse Zwart", specs: "Friteuse, 4.1L, Rapid Air, Digitale display", basePrice: 179 }
+],
+"Blenders & mixers": [
+{ name: "KitchenAid Artisan 5KSM185 2021 Keukenmachine Rood", specs: "Keukenmachine, 4.8L, 10 snelheden, 300W", basePrice: 699 },
+{ name: "Philips Viva Collection HR7751 2020 Blender Zwart", specs: "Blender, 1.5L, 600W, Ice Crush", basePrice: 79 },
+{ name: "Bosch MUM58L20 2021 Keukenmachine Rood", specs: "Keukenmachine, 3.9L, 1000W, 7 snelheden", basePrice: 299 },
+{ name: "Philips PowerChop 2021 Blender Zwart", specs: "Blender, 1.1L, 450W, Chopping", basePrice: 49 }
+],
+"Magnetrons": [
+{ name: "Samsung MS23K3513AS 2021 Magnetron Zilver", specs: "Magnetron, 23L, 800W, Grill functie", basePrice: 129 },
+{ name: "Whirlpool MWO251SL 2021 Magnetron Zilver", specs: "Magnetron, 25L, 800W, Crisp functie", basePrice: 149 },
+{ name: "Panasonic NN-GDF574S 2021 Magnetron Zilver", specs: "Magnetron, 27L, 1000W, Inverter", basePrice: 199 },
+{ name: "Sharp R821 2021 Magnetron Zwart", specs: "Magnetron, 25L, 900W, Grill functie", basePrice: 179 }
+],
+"Broodroosters & waterkokers": [
+{ name: "Russell Hobbs Buckingham 2021 Broodrooster Zwart", specs: "Broodrooster, 2 snee, 800W, Extra wide slots", basePrice: 49 },
+{ name: "Smeg TSF01RDEU 2020 Broodrooster Rood", specs: "Broodrooster, 2 snee, 950W, Retro design", basePrice: 99 },
+{ name: "Philips HD4646 2020 Waterkoker Wit", specs: "Waterkoker, 1.7L, 2400W, Automatische uitschakeling", basePrice: 39 },
+{ name: "Bosch Styline 2021 Waterkoker Zwart", specs: "Waterkoker, 1.7L, 2200W, KeepWarm functie", basePrice: 69 }
 ]
 }
 };
@@ -1126,8 +1248,8 @@ const templates = productTemplates[subcat]?.[brand] || [];
 const templateCount = templates.length || 2;
 for (let i = 1; i <= templateCount; i++) {
 const template = templates[i-1] || { 
-name: `${brand} ${subcat.replace(" & ", " ")} ${2022 + (idCounter % 5)} Pro ${i}`,
-specs: "Premium specificaties met hoogwaardige componenten",
+name: `${brand} ${subcat.replace(" & ", " ")} ${2022 + (idCounter % 5)}`,
+specs: "Standaard specificaties",
 basePrice: 120 + (cIdx * 190) + (sIdx * 45) + (bIdx * 35) + (i * 25)
 };
 
