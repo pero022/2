@@ -440,6 +440,72 @@ border-radius: 10px;
 border: 1px solid #e7edf8;
 background: #f6f8fd;
 }
+.pd-image-gallery {
+display: flex;
+flex-direction: column;
+gap: 12px;
+}
+.pd-main-image {
+position: relative;
+}
+.pd-main-image img {
+width: 100%;
+height: auto;
+border-radius: 10px;
+border: 1px solid #e7edf8;
+background: #f6f8fd;
+}
+.pd-image-nav {
+position: absolute;
+top: 50%;
+transform: translateY(-50%);
+background: rgba(255, 255, 255, 0.9);
+border: 1px solid #e7edf8;
+border-radius: 50%;
+width: 40px;
+height: 40px;
+display: flex;
+align-items: center;
+justify-content: center;
+cursor: pointer;
+font-size: 16px;
+color: var(--text);
+transition: all var(--transition);
+z-index: 10;
+}
+.pd-image-nav:hover {
+background: white;
+border-color: var(--royal-blue);
+color: var(--royal-blue);
+}
+.pd-prev {
+left: 10px;
+}
+.pd-next {
+right: 10px;
+}
+.pd-thumbnails {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+gap: 8px;
+}
+.pd-thumb {
+width: 100%;
+height: 60px;
+object-fit: cover;
+border-radius: 6px;
+border: 2px solid transparent;
+cursor: pointer;
+transition: all var(--transition);
+}
+.pd-thumb:hover {
+border-color: var(--royal-blue);
+opacity: 0.8;
+}
+.pd-thumb.active {
+border-color: var(--royal-blue);
+box-shadow: 0 0 0 2px rgba(0, 61, 165, 0.2);
+}
 .specs {
 background: #f8faff;
 border: 1px solid #dde7f8;
@@ -950,102 +1016,104 @@ function createProducts() {
 const products = [];
 let idCounter = 1;
 
-// Real product templates by category and brand
+// Real product templates by category and brand - Coolblue style names
 const productTemplates = {
 "Smartphones": {
 "Apple": [
-{ name: "iPhone 17 Pro Max 256GB", specs: "A19 Pro chip, 6.9\" Super Retina XDR, 48MP camera", basePrice: 1299 },
-{ name: "iPhone 17 128GB", specs: "A19 chip, 6.1\" Super Retina XDR, 48MP camera", basePrice: 899 },
-{ name: "iPhone 16 Pro 256GB", specs: "A18 Pro chip, 6.3\" Super Retina XDR, 48MP camera", basePrice: 1099 }
+{ name: "APPLE iPhone 17 Pro Max - 5G - 256GB - Black", specs: "A19 Pro chip, 6.9\" Super Retina XDR, 48MP camera", basePrice: 1299 },
+{ name: "APPLE iPhone 17 Pro - 5G - 256GB - Mist Blue", specs: "A19 Pro chip, 6.3\" Super Retina XDR, 48MP camera", basePrice: 1099 },
+{ name: "APPLE iPhone 17 - 5G - 128GB - White", specs: "A19 chip, 6.1\" Super Retina XDR, 48MP camera", basePrice: 899 },
+{ name: "APPLE iPhone 16 Pro Max - 5G - 512GB - Titanium", specs: "A18 Pro chip, 6.7\" Super Retina XDR, 48MP camera", basePrice: 1499 }
 ],
 "Samsung": [
-{ name: "Galaxy S24 Ultra 256GB", specs: "Snapdragon 8 Gen 3, 6.8\" Dynamic AMOLED 2X, 200MP camera", basePrice: 1199 },
-{ name: "Galaxy S24 Plus 128GB", specs: "Snapdragon 8 Gen 3, 6.7\" Dynamic AMOLED 2X, 50MP camera", basePrice: 899 },
-{ name: "Galaxy Z Fold 6 512GB", specs: "Snapdragon 8 Gen 3, 7.6\" foldable display, 50MP camera", basePrice: 1799 }
+{ name: "SAMSUNG Galaxy S24 Ultra - 5G - 256GB - Titanium Violet", specs: "Snapdragon 8 Gen 3, 6.8\" Dynamic AMOLED 2X, 200MP camera", basePrice: 1199 },
+{ name: "SAMSUNG Galaxy S24 Plus - 5G - 256GB - Black", specs: "Snapdragon 8 Gen 3, 6.7\" Dynamic AMOLED 2X, 50MP camera", basePrice: 999 },
+{ name: "SAMSUNG Galaxy Z Fold 6 - 5G - 512GB - Navy", specs: "Snapdragon 8 Gen 3, 7.6\" foldable display, 50MP camera", basePrice: 1799 },
+{ name: "SAMSUNG Galaxy S24 - 5G - 128GB - Yellow", specs: "Snapdragon 8 Gen 3, 6.2\" Dynamic AMOLED 2X, 50MP camera", basePrice: 799 }
 ]
 },
 "Laptops": {
 "Apple": [
-{ name: "MacBook Pro 14\" M3", specs: "Apple M3 chip, 14.2\" Liquid Retina XDR, 18GB RAM, 512GB SSD", basePrice: 1699 },
-{ name: "MacBook Air 13\" M2", specs: "Apple M2 chip, 13.6\" Liquid Retina, 8GB RAM, 256GB SSD", basePrice: 1199 },
-{ name: "MacBook Pro 16\" M3 Max", specs: "Apple M3 Max chip, 16.2\" Liquid Retina XDR, 36GB RAM, 1TB SSD", basePrice: 2799 }
+{ name: "APPLE MacBook Air 13 inch - M5 - 16GB - 1TB SSD - Midnight", specs: "Apple M5 chip, 13.6\" Liquid Retina, 16GB RAM, 1TB SSD, QWERTY keyboard", basePrice: 1799 },
+{ name: "APPLE MacBook Pro 14 inch - M3 - 18GB - 512GB SSD - Space Gray", specs: "Apple M3 chip, 14.2\" Liquid Retina XDR, 18GB RAM, 512GB SSD", basePrice: 1999 },
+{ name: "APPLE MacBook Pro 16 inch - M3 Max - 36GB - 1TB SSD - Silver", specs: "Apple M3 Max chip, 16.2\" Liquid Retina XDR, 36GB RAM, 1TB SSD", basePrice: 3299 }
 ],
 "Dell": [
-{ name: "XPS 15 9530", specs: "Intel Core i7-13700H, 15.6\" FHD+, 16GB RAM, 512GB SSD, RTX 4060", basePrice: 1499 },
-{ name: "Latitude 7420", specs: "Intel Core i5-1245U, 14\" FHD, 16GB RAM, 256GB SSD", basePrice: 999 },
-{ name: "Inspiron 16 Plus", specs: "Intel Core i7-1260P, 16\" FHD+, 16GB RAM, 512GB SSD", basePrice: 1199 }
+{ name: "DELL XPS 15 - Intel Core i7 - 16GB - 1TB SSD - RTX 4060 - Black", specs: "Intel Core i7-13700H, 15.6\" FHD+, 16GB RAM, 1TB SSD, RTX 4060", basePrice: 1899 },
+{ name: "DELL Latitude 7420 - Intel Core i5 - 16GB - 512GB SSD - Black", specs: "Intel Core i5-1245U, 14\" FHD, 16GB RAM, 512GB SSD", basePrice: 1299 },
+{ name: "DELL Inspiron 16 Plus - Intel Core i7 - 16GB - 1TB SSD - Silver", specs: "Intel Core i7-1260P, 16\" FHD+, 16GB RAM, 1TB SSD", basePrice: 1499 }
 ]
 },
 "Tablets": {
 "Apple": [
-{ name: "iPad Pro 12.9\" M2", specs: "Apple M2 chip, 12.9\" Liquid Retina XDR, 128GB, Wi-Fi", basePrice: 1099 },
-{ name: "iPad Air 10.9\" M1", specs: "Apple M1 chip, 10.9\" Liquid Retina, 64GB, Wi-Fi", basePrice: 599 },
-{ name: "iPad 10th Gen", specs: "A14 Bionic chip, 10.9\" Liquid Retina, 64GB, Wi-Fi", basePrice: 449 }
+{ name: "APPLE iPad Pro 12.9 inch - M2 - 128GB - Wi-Fi - Space Gray", specs: "Apple M2 chip, 12.9\" Liquid Retina XDR, 128GB, Wi-Fi", basePrice: 1299 },
+{ name: "APPLE iPad Air 10.9 inch - M5 - 256GB - Wi-Fi - Blue", specs: "Apple M5 chip, 10.9\" Liquid Retina, 256GB, Wi-Fi", basePrice: 899 },
+{ name: "APPLE iPad 10.9 inch - A16 - 11 inch - 128GB - Wi-Fi - Silver", specs: "A14 Bionic chip, 10.9\" Liquid Retina, 64GB, Wi-Fi", basePrice: 549 }
 ],
 "Samsung": [
-{ name: "Galaxy Tab S9 Ultra", specs: "Snapdragon 8 Gen 2, 14.6\" AMOLED, 12GB RAM, 512GB", basePrice: 1199 },
-{ name: "Galaxy Tab S9 Plus", specs: "Snapdragon 8 Gen 2, 12.4\" AMOLED, 8GB RAM, 256GB", basePrice: 899 },
-{ name: "Galaxy Tab A9 Plus", specs: "Snapdragon 695, 11\" LCD, 4GB RAM, 64GB", basePrice: 399 }
+{ name: "SAMSUNG Galaxy Tab S9 Ultra - 14.6 inch - 5G - 512GB - Graphite", specs: "Snapdragon 8 Gen 2, 14.6\" AMOLED, 12GB RAM, 512GB, 5G", basePrice: 1399 },
+{ name: "SAMSUNG Galaxy Tab S9 Plus - 12.4 inch - Wi-Fi - 256GB - Beige", specs: "Snapdragon 8 Gen 2, 12.4\" AMOLED, 8GB RAM, 256GB, Wi-Fi", basePrice: 999 },
+{ name: "SAMSUNG Galaxy Tab A9 Plus - 11 inch - Wi-Fi - 64GB - Silver", specs: "Snapdragon 695, 11\" LCD, 4GB RAM, 64GB, Wi-Fi", basePrice: 399 }
 ]
 },
 "TV's": {
 "Samsung": [
-{ name: "Samsung Q80C 55\" QLED 4K", specs: "55\" QLED, 4K UHD, Quantum HDR, Object Tracking Sound", basePrice: 999 },
-{ name: "Samsung S95C 65\" OLED 4K", specs: "65\" OLED, 4K UHD, Quantum HDR, Neural Quantum Processor", basePrice: 1799 },
-{ name: "Samsung The Frame 50\"", specs: "50\" QLED, 4K UHD, Art Mode, Customizable Bezels", basePrice: 1299 }
+{ name: "SAMSUNG QE55Q80C - 55 inch - QLED - 4K - Smart TV - Black", specs: "55\" QLED, 4K UHD, Quantum HDR, Object Tracking Sound, Smart TV", basePrice: 1099 },
+{ name: "SAMSUNG QE65S95C - 65 inch - OLED - 4K - Smart TV - Black", specs: "65\" OLED, 4K UHD, Quantum HDR, Neural Quantum Processor, Smart TV", basePrice: 1899 },
+{ name: "SAMSUNG UE50LS03B - 50 inch - The Frame - QLED - 4K - Smart TV - Black", specs: "50\" QLED, 4K UHD, Art Mode, Customizable Bezels, Smart TV", basePrice: 1399 }
 ],
 "LG": [
-{ name: "LG C3 55\" OLED 4K", specs: "55\" OLED, 4K UHD, Dolby Vision, Dolby Atmos, webOS", basePrice: 1399 },
-{ name: "LG G3 65\" OLED 4K", specs: "65\" OLED, 4K UHD, Brightness Booster, Dolby Vision", basePrice: 2199 },
-{ name: "LG NANO75 43\" LED 4K", specs: "43\" LED, 4K UHD, NanoCell, webOS, Game Optimizer", basePrice: 599 }
+{ name: "LG OLED55C3 - 55 inch - OLED - 4K - Smart TV - Black", specs: "55\" OLED, 4K UHD, Dolby Vision, Dolby Atmos, webOS, Smart TV", basePrice: 1499 },
+{ name: "LG OLED65G3 - 65 inch - OLED evo - 4K - Smart TV - Black", specs: "65\" OLED, 4K UHD, Brightness Booster, Dolby Vision, webOS, Smart TV", basePrice: 2399 },
+{ name: "LG 43NANO756 - 43 inch - NanoCell - 4K - Smart TV - Black", specs: "43\" LED, 4K UHD, NanoCell, webOS, Game Optimizer, Smart TV", basePrice: 699 }
 ]
 },
 "Audio": {
 "Sony": [
-{ name: "Sony WH-1000XM5", specs: "Over-ear noise cancelling, 30hr battery, LDAC, Multipoint", basePrice: 399 },
-{ name: "Sony WF-1000XM5", specs: "True wireless, noise cancelling, 8hr battery, LDAC", basePrice: 279 },
-{ name: "Sony SRS-XB33", specs: "Portable Bluetooth, Extra Bass, 24hr battery, IP67", basePrice: 149 }
+{ name: "SONY WH-1000XM5 - Over-ear - Noise Cancelling - Black", specs: "Over-ear noise cancelling, 30hr battery, LDAC, Multipoint", basePrice: 399 },
+{ name: "SONY WF-1000XM5 - True Wireless - Noise Cancelling - Black", specs: "True wireless, noise cancelling, 8hr battery, LDAC", basePrice: 279 },
+{ name: "SONY SRS-XB33 - Portable Bluetooth - Extra Bass - Black", specs: "Portable Bluetooth, Extra Bass, 24hr battery, IP67", basePrice: 149 }
 ],
 "Bose": [
-{ name: "Bose QuietComfort 45", specs: "Over-ear noise cancelling, 24hr battery, Clear Voice", basePrice: 329 },
-{ name: "Bose SoundLink Flex", specs: "Portable Bluetooth, PositionIQ, 12hr battery, IP67", basePrice: 129 },
-{ name: "Bose QuietComfort Earbuds II", specs: "True wireless, noise cancelling, 6hr battery, CustomTune", basePrice: 279 }
+{ name: "BOSE QuietComfort 45 - Over-ear - Noise Cancelling - Black", specs: "Over-ear noise cancelling, 24hr battery, Clear Voice", basePrice: 329 },
+{ name: "BOSE SoundLink Flex - Portable Bluetooth - Black", specs: "Portable Bluetooth, PositionIQ, 12hr battery, IP67", basePrice: 129 },
+{ name: "BOSE QuietComfort Earbuds II - True Wireless - Noise Cancelling - Black", specs: "True wireless, noise cancelling, 6hr battery, CustomTune", basePrice: 279 }
 ]
 },
 "Gaming": {
 "Sony": [
-{ name: "PlayStation 5 Slim", specs: "Slim design, 1TB SSD, DualSense controller, 4K gaming", basePrice: 499 },
-{ name: "PlayStation 5 Digital Edition", specs: "Digital only, 1TB SSD, DualSense controller, 4K gaming", basePrice: 449 },
-{ name: "PlayStation VR2", specs: "VR headset, 4K HDR, eye tracking, haptic feedback", basePrice: 549 }
+{ name: "SONY PlayStation 5 Slim - 1TB SSD - 4K Gaming - Black", specs: "Slim design, 1TB SSD, DualSense controller, 4K gaming", basePrice: 549 },
+{ name: "SONY PlayStation 5 Digital Edition - 1TB SSD - 4K Gaming - Black", specs: "Digital only, 1TB SSD, DualSense controller, 4K gaming", basePrice: 499 },
+{ name: "SONY PlayStation VR2 - VR Headset - 4K HDR - Black", specs: "VR headset, 4K HDR, eye tracking, haptic feedback", basePrice: 599 }
 ],
 "Microsoft": [
-{ name: "Xbox Series X", specs: "1TB SSD, 4K gaming, 120fps, Xbox Game Pass", basePrice: 499 },
-{ name: "Xbox Series S", specs: "512GB SSD, 1440p gaming, 120fps, Xbox Game Pass", basePrice: 299 },
-{ name: "Xbox Wireless Controller", specs: "Wireless, textured grips, Bluetooth, USB-C", basePrice: 59 }
+{ name: "MICROSOFT Xbox Series X - 1TB SSD - 4K Gaming - Black", specs: "1TB SSD, 4K gaming, 120fps, Xbox Game Pass", basePrice: 549 },
+{ name: "MICROSOFT Xbox Series S - 512GB SSD - 1440p Gaming - Black", specs: "512GB SSD, 1440p gaming, 120fps, Xbox Game Pass", basePrice: 349 },
+{ name: "MICROSOFT Xbox Wireless Controller - Wireless - Black", specs: "Wireless, textured grips, Bluetooth, USB-C", basePrice: 69 }
 ]
 },
 "Witgoed": {
 "Miele": [
-{ name: "Miele WCR 773 WCS", specs: "Wasautomaat, 9kg, 1400rpm, PerfectDry, WiFi", basePrice: 1299 },
-{ name: "Miele G 7314 SC", specs: "Vaatwasser, 14 couverts, AutoOpen, WiFi, 3D cutlery tray", basePrice: 899 },
-{ name: "Miele T 8813 WP", specs: "Warmtepompdroger, 9kg, FragranceDos, PerfectDry", basePrice: 1099 }
+{ name: "MIELE WCR 773 WCS - Wasautomaat - 9kg - 1400rpm - White", specs: "Wasautomaat, 9kg, 1400rpm, PerfectDry, WiFi", basePrice: 1399 },
+{ name: "MIELE G 7314 SC - Vaatwasser - 14 couverts - White", specs: "Vaatwasser, 14 couverts, AutoOpen, WiFi, 3D cutlery tray", basePrice: 999 },
+{ name: "MIELE T 8813 WP - Warmtepompdroger - 9kg - White", specs: "Warmtepompdroger, 9kg, FragranceDos, PerfectDry", basePrice: 1199 }
 ],
 "Bosch": [
-{ name: "Bosch WAN28280NL", specs: "Wasautomaat, 8kg, 1400rpm, Home Connect, SpeedPerfect", basePrice: 699 },
-{ name: "Bosch SMV6ZCX01E", specs: "Vaatwasser, 13 couverts, Home Connect, VarioDrawer", basePrice: 799 },
-{ name: "Bosch WTR87V01NL", specs: "Warmtepompdroger, 8kg, AutoDry, Home Connect", basePrice: 899 }
+{ name: "BOSCH WAN28280NL - Wasautomaat - 8kg - 1400rpm - White", specs: "Wasautomaat, 8kg, 1400rpm, Home Connect, SpeedPerfect", basePrice: 799 },
+{ name: "BOSCH SMV6ZCX01E - Vaatwasser - 13 couverts - Inbouw - Black", specs: "Vaatwasser, 13 couverts, Home Connect, VarioDrawer", basePrice: 899 },
+{ name: "BOSCH WTR87V01NL - Warmtepompdroger - 8kg - White", specs: "Warmtepompdroger, 8kg, AutoDry, Home Connect", basePrice: 999 }
 ]
 },
 "Keuken": {
 "KitchenAid": [
-{ name: "KitchenAid Artisan 5KSM185", specs: "Keukenmachine, 4.8L, 10 snelheden, 300W, 3 jaar garantie", basePrice: 599 },
-{ name: "KitchenAid 5KFC3516", specs: "Food processor, 3.3L, 2 snelheden, ExactSlice", basePrice: 399 },
-{ name: "KitchenAid 5KSB8270", specs: "Blender, 1.5L, 3 snelheden, Adapti-Blend", basePrice: 299 }
+{ name: "KITCHENAID Artisan 5KSM185 - Keukenmachine - 4.8L - Red", specs: "Keukenmachine, 4.8L, 10 snelheden, 300W, 3 jaar garantie", basePrice: 699 },
+{ name: "KITCHENAID 5KFC3516 - Food Processor - 3.3L - Black", specs: "Food processor, 3.3L, 2 snelheden, ExactSlice", basePrice: 449 },
+{ name: "KITCHENAID 5KSB8270 - Blender - 1.5L - Black", specs: "Blender, 1.5L, 3 snelheden, Adapti-Blend", basePrice: 349 }
 ],
 "Nespresso": [
-{ name: "Nespresso Lattissima One", specs: "Koffiemachine, 19 bar, Melksysteem, 1 jaar garantie", basePrice: 299 },
-{ name: "Nespresso Creatista Plus", specs: "Koffiemachine, 19 bar, Stoompijp, Touch display", basePrice: 499 },
-{ name: "Nespresso Essenza Mini", specs: "Koffiemachine, 19 bar, Compact, 2 cup sizes", basePrice: 149 }
+{ name: "NESPRESSO Lattissima One - Koffiemachine - 19 bar - Black", specs: "Koffiemachine, 19 bar, Melksysteem, 1 jaar garantie", basePrice: 349 },
+{ name: "NESPRESSO Creatista Plus - Koffiemachine - 19 bar - Stainless Steel", specs: "Koffiemachine, 19 bar, Stoompijp, Touch display", basePrice: 599 },
+{ name: "NESPRESSO Essenza Mini - Koffiemachine - 19 bar - Black", specs: "Koffiemachine, 19 bar, Compact, 2 cup sizes", basePrice: 179 }
 ]
 }
 };
@@ -1083,9 +1151,14 @@ const longDesc = `${name} is zorgvuldig geselecteerd uit overstock en retourpart
 + `\n- Levertijd: ${deliveryBySubcat[subcat] || deliveryBySubcat.default}`
 + `${installCost ? `\n- Installatiekosten: ${euro(installCost)}` : ""}`;
 
-// Realistic product images using picsum.photos with product-specific seeds
+// Realistic product images using picsum.photos with product-specific seeds - multiple images per product
 const imageSeed = `${brand}-${subcat}-${i}`.toLowerCase().replace(/\s+/g, '-');
-const image = `https://picsum.photos/seed/${imageSeed}/700/500.jpg`;
+const images = [
+`https://picsum.photos/seed/${imageSeed}-front/700/500.jpg`,
+`https://picsum.photos/seed/${imageSeed}-side/700/500.jpg`,
+`https://picsum.photos/seed/${imageSeed}-back/700/500.jpg`
+];
+const image = images[0]; // Primary image
 
 const baseReviews = [0,1,2].map(n => {
 const p = reviewPool[(idCounter + n) % reviewPool.length];
@@ -1097,7 +1170,7 @@ products.push({
 id: idCounter++,
 slug: slug(name) + "-" + Math.floor(Math.random() * 999),
 category, subcat, brand, name, shortDesc, longDesc, oldPrice, newPrice, discount, stock,
-delivery: deliveryBySubcat[subcat] || deliveryBySubcat.default, rating, image, installCost,
+delivery: deliveryBySubcat[subcat] || deliveryBySubcat.default, rating, image, images, installCost,
 isNew: (idCounter % 3 === 0), popularity: (idCounter * 11) % 100, baseReviews
 });
 }
@@ -1423,7 +1496,20 @@ const heartSvg = "<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fi
 return withPage(`
 <div class="breadcrumb"><button data-nav="home">Home</button> / <button data-nav="category" data-category="${p.category}">${p.category}</button> / <button data-nav="subcategory" data-category="${p.category}" data-subcat="${p.subcat}">${p.subcat}</button> / ${escapeHtml(p.name)}</div>
 <article class="card product-detail pd-main">
-<div><img src="${p.image}" alt="${escapeHtml(p.name)}" /></div>
+<div class="pd-image-gallery">
+<div class="pd-main-image">
+<img id="mainImage" src="${p.image}" alt="${escapeHtml(p.name)}" />
+<button class="pd-image-nav pd-prev" onclick="changeImage(-1)">&#10094;</button>
+<button class="pd-image-nav pd-next" onclick="changeImage(1)">&#10095;</button>
+</div>
+<div class="pd-thumbnails">
+${(p.images || [p.image]).map((img, idx) => `
+<img src="${img}" alt="${escapeHtml(p.name)} - Foto ${idx + 1}" 
+class="pd-thumb ${idx === 0 ? 'active' : ''}" 
+onclick="selectImage(${idx})"
+data-index="${idx}" />`).join('')}
+</div>
+</div>
 <div class="pd-buy">
 <h1>${escapeHtml(p.name)}</h1>
 <div class="pd-rating-row">
@@ -1942,6 +2028,55 @@ const q = searchInput.value.trim().toLowerCase();
 if (!q) return navigate({ page: "home" }, true);
 navigate({ page: "listing", sort: "pop", query: q, maxPrice: undefined }, true);
 });
+// Image gallery functionality
+let currentProductImages = [];
+let currentImageIndex = 0;
+
+function changeImage(direction) {
+if (currentProductImages.length <= 1) return;
+currentImageIndex = (currentImageIndex + direction + currentProductImages.length) % currentProductImages.length;
+updateMainImage();
+}
+
+function selectImage(index) {
+currentImageIndex = index;
+updateMainImage();
+}
+
+function updateMainImage() {
+const mainImg = document.getElementById('mainImage');
+if (mainImg && currentProductImages[currentImageIndex]) {
+mainImg.src = currentProductImages[currentImageIndex];
+// Update thumbnail active states
+document.querySelectorAll('.pd-thumb').forEach((thumb, idx) => {
+  thumb.classList.toggle('active', idx === currentImageIndex);
+});
+}
+// Initialize gallery when product detail page loads
+document.addEventListener('DOMContentLoaded', () => {
+// Override the render function to initialize gallery for product details
+const originalRender = window.render;
+window.render = function(state) {
+  const result = originalRender.call(this, state);
+  if (state.page === 'product' && state.id) {
+    // Initialize gallery after a short delay to ensure DOM is ready
+    setTimeout(() => {
+      const mainImg = document.getElementById('mainImage');
+      if (mainImg) {
+        // Get current product images from the displayed product
+        const product = allProducts().find(p => p.id == state.id);
+        if (product && product.images) {
+          currentProductImages = product.images;
+          currentImageIndex = 0;
+          updateMainImage();
+        }
+      }
+    }, 100);
+  }
+  return result;
+};
+});
+}
 initNav();
 updateCounters();
 const start = history.state || { page: "home" };
