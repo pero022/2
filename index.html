@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>CertoDeals - High-end deals met grote kortingen</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>CertoDeals - Elektronica & Huisapparaten</title>
 <style>
 :root {
 --royal-blue: #003da5;
@@ -27,10 +27,18 @@ margin: 0;
 font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 color: var(--text);
 background: var(--bg);
+min-height: 100vh;
+overflow-x: hidden;
 }
 a { color: inherit; text-decoration: none; }
 button { font: inherit; }
-.container { width: min(1240px, 94vw); margin: 0 auto; }
+.container {
+max-width: 1220px;
+margin: 0 auto;
+padding: 0 16px;
+width: 100%;
+box-sizing: border-box;
+}
 .promo-strip {
 background: #0c0d11;
 color: #f4f6ff;
@@ -858,6 +866,37 @@ th, td { min-width: 120px; }
 @media (max-width: 620px) {
 .filters { grid-template-columns: 1fr; }
 .footer-grid { grid-template-columns: 1fr; }
+.container { padding: 0 12px; }
+.trust-strip { height: 35px; }
+.trust-item { font-size: 0.75rem; padding: 0 15px; }
+.promo-strip .container { 
+flex-direction: column; 
+gap: 8px; 
+padding: 8px 0;
+text-align: center;
+}
+.topbar-inner { padding: 12px 0; }
+.search-wrap { margin: 12px 0; }
+.header-actions { gap: 8px; }
+.icon-btn { font-size: 0.8rem; padding: 8px 10px; }
+.counter { min-width: 18px; height: 18px; font-size: 0.68rem; }
+}
+
+@media (max-width: 480px) {
+.container { padding: 0 10px; }
+.trust-strip { height: 32px; }
+.trust-item { font-size: 0.7rem; padding: 0 12px; }
+.trust-strip .container { animation-duration: 15s; }
+.icon-btn { font-size: 0.75rem; padding: 6px 8px; }
+.header-actions { flex-wrap: wrap; }
+.search-wrap { margin: 8px 0; }
+.search-wrap input { font-size: 0.9rem; }
+.category-card { min-width: 140px; }
+.category-card h3 { font-size: 0.9rem; }
+.category-card .count { font-size: 0.75rem; }
+.product-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+.product-card h3 { font-size: 0.85rem; line-height: 1.2; }
+.product-card .price { font-size: 0.9rem; }
 }
 
 /* Scrollende tekst animatie van links naar rechts */
@@ -875,15 +914,25 @@ animation: scrollText 15s linear infinite;
 .trust-strip {
 overflow: hidden;
 position: relative;
+height: 40px;
+display: flex;
+align-items: center;
 }
 
 .trust-strip .container {
 display: flex;
 animation: scrollText 20s linear infinite;
+width: 200%;
 }
 
 .trust-strip .container:hover {
 animation-play-state: paused;
+}
+
+.trust-item {
+padding: 0 20px;
+white-space: nowrap;
+flex-shrink: 0;
 }
 </style>
 </head>
